@@ -1,0 +1,16 @@
+variable "project" {
+  type    = string
+  default = "{{google_project}}"
+}
+
+variable "region" {
+  type        = string
+  description = "to deploy to"
+  default     = "{{primary_region}}"
+}
+
+variable "replica_region" {
+  type        = string
+  description = "to replicate to"
+  default     = "{{replica_region}}"
+}

@@ -1,0 +1,15 @@
+terraform {
+  backend "gcs" {
+    bucket = "{{ google_project }}-terraform-state"
+    prefix = "{{ slackbot_name }}"
+  }
+}
+
+provider "google" {
+  project = var.project
+  region  = var.region
+}
+
+data "google_project" "current" {
+  provider = google
+}

@@ -1,0 +1,5 @@
+public-key.pem
+encrypt.sh
+.terraform
+*.tfstate
+*.backup

@@ -1,0 +1,148 @@
+# questions
+name:
+  type: str
+  help: the human readable name of your slackbot
+  validator: >-
+    {% if not (name | regex_search('^[a-zA-Z0-9][a-zA-Z0-9\ ]*[a-zA-Z0-9]$')) %}
+    the slackbot names must consists of letter digits and spaces
+    {% endif %}
+
+description:
+  type: str
+  help: a short description of the Slackbot
+  default: >-
+    chats about 
+
+package_name:
+  type: str
+  help: the name of the package
+  default: >-
+    {{ name |
+    regex_replace('[^a-zA-Z0-9]+', '_') |
+    regex_replace('([a-z0-9])([A-Z])', '\\1_\\2') | trim('_') | lower }}
+  validator: |
+    {% if not (package_name | regex_search('[a-z0-9_]_')) %}
+    the package name must only consist of lowercase letters, digits and underscore.
+    {% endif %}
+
+slackbot_name:
+  type: str
+  help: the slackbot program name
+  default: >-
+    {{ package_name | regex_replace('_', '-')  }}
+  when: false
+
+author:
+  type: str
+  help: Your full name?
+  validator: |
+    {% if not author.strip() %}
+    Slightly more than nothing would be awesome!
+    {% endif %}
+
+author_email:
+  type: str
+  help: Your email address?
+  validator: |
+    {% if not (author_email | regex_search('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\\.[A-Z|a-z]{2,})+')) %}
+    Must be an email address.
+    {% endif %}
+
+google_project:
+  type: str
+  help: the google project to deploy to
+  validator: |
+    {% if not (google_project | regex_search('^[a-z][a-z0-9\-]+$')) %}
+    the google project id must only consist of lower letters, digits and dashes.
+    {% endif %}
+
+primary_region:
+  type: str
+  help: primary region to deploy the slackbot to
+  default: europe-west4
+  validator: |
+    {% if not (primary_region | regex_search('^[a-z]+-[a-z]+[0-9]$')) %}
+    make sure the region has the pattern like europe-west4
+    {% endif %}
+
+replica_region:
+  type: str
+  help: the replica region for slackbot artifacts
+  default: europe-west1
+  validator: |
+    {% if not (replica_region | regex_search('^[a-z]+-[a-z]+[0-9]$')) %}
+    make sure the region has the pattern like europe-west-4
+    {% endif %}
+    {% if replica_region == primary_region %}
+    replica region must be different from the primary region
+    {% endif %}
+
+repository_location:
+  type: str
+  help: the artifact repository location to deploy the image to
+  default: europe
+  validator: |
+    {% if repository_location not in ["europe", "asia", "us", primary_region] %}
+    choose europe, asia, us or the primary region.
+    {% endif %}
+
+terraform_state_bucket_location:
+  type: str
+  help: the terraform state bucket location
+  default: '{{ repository_location | regex_replace("europe", "eu") }}'
+  when: false
+  validator: |
+    {% if terraform_state_bucket_location not in ["eu", "asia", "us", primary_region] %}
+    choose eu, asia, us or the primary region.
+    {% endif %}
+
+terraform_state_bucket:
+  type: str
+  help: name of the terraform state bucket
+  default: '{{google_project}}-terraform-state'
+  validator: |
+    {% if not (terraform_state_bucket | regex_search('^[a-z][a-z0-9\-]+$')) %}
+    the terraform state bucket must only consist of lower letters, digits and dashes.
+    {% endif %}
+
+url:
+  type: str
+  help: the URL to git source repository
+  default: >-
+    https://source.developers.google.com/p/{{google_project}}/r/{{slackbot_name}}
+  when: false
+
+_skip_if_exists:
+  - tests/**
+  - 'src/{{module_name}}/**'
+  - README.md
+  - setup.cfg
+  - .release
+  - Pipfile
+  - pyproject.toml
+
+_exclude:
+  - copier.yaml
+  - ~*
+  - __pycache__
+  - .DS_Store
+  - .git
+  - .idea
+  - build
+  - dist
+  - venv
+  - README.md
+
+_tasks:
+  # do a git init, google source repositories only support master as default branch :-(
+  - >-
+    [[ ! -d .git ]] &&
+    ( git init --initial-branch master &&
+    git add . &&
+    git commit -m 'initial import' &&
+    git remote add origin {{url}} &&
+    git tag 0.0.0) || exit 0
+  - >-
+    echo "===check your state bucket exists ===";
+    echo "gsutil mb -l {{terraform_state_bucket_location}} gs://{{terraform_state_bucket}}"
+    echo "gsutil versioning set on gs://{{terraform_state_bucket}}"

@@ -1,0 +1,26 @@
+from {{package_name}}.bot import mention_help
+
+
+say_args = ()
+
+def say(*args, **kwargs):
+    global say_args
+    say_args = (args, kwargs)
+
+def test_mention_help():
+    """
+    tests the mention_help function
+    """
+
+    event = {
+        "text": "lorum ipsum",
+        "ts": "123456"
+    }
+
+    mention_help(event=event, say=say)
+    args, kwargs = say_args
+
+    expect = "Please add the mentions"
+    assert args and expect == args[0].strip()
+
+    assert "123456" == kwargs.get("thread_ts")

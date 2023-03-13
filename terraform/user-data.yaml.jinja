@@ -1,0 +1,39 @@
+#cloud-config
+users:
+  - name: {{ slackbot_name }}
+    groups: docker
+
+write_files:
+  - path: /etc/systemd/system/{{ slackbot_name }}.service
+    permissions: '0644'
+    owner: root
+    content: |
+      [Unit]
+      Description={{ description }}
+
+      [Service]
+      Type=simple
+      
+      User={{ slackbot_name }}
+      Group={{ slackbot_name }}
+      
+      ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
+      ExecStop=/usr/bin/docker stop {{ slackbot_name }}
+      
+      ExecStart=/usr/bin/docker run \
+        --init \
+        --rm \
+        --name {{ slackbot_name }} \
+        --network host \
+        {{repository_location}}-docker.pkg.dev/{{google_project}}/{{slackbot_name}}/{{slackbot_name}}:latest \
+        start-slackbot --socket-mode
+
+      Restart=always
+      SuccessExitStatus=0 SIGTERM
+      
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - systemctl daemon-reload
+  - systemctl start {{ slackbot_name }}.service

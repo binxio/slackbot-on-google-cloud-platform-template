@@ -1,0 +1,15 @@
+timeout: 2400s
+options:
+  substitution_option: 'ALLOW_LOOSE'
+  env:
+    - TF_VAR_project=${PROJECT_ID}
+
+steps:
+  - name: 'docker.io/hashicorp/terraform:1.3.4'
+    args: ['init']
+    dir: ./terraform
+
+  - name: 'docker.io/hashicorp/terraform:1.3.4'
+    args: ['apply', '-auto-approve']
+    dir: ./terraform
+    timeout: 1800s
