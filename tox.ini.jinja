@@ -15,3 +15,6 @@ setenv =
    {{slackbot_name | regex_replace("-", "_") |upper}}_SIGNING_SECRET = deadbeef
 
 commands = pytest tests
+
+[pytest]
+addopts = --doctest-modules src/
