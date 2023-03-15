@@ -4,4 +4,12 @@ GOOGLE_PROJECT={{google_project}}
 GOOGLE_REGION={{primary_region}}
 SLACKBOT_NAME={{slackbot_name}}
 
+GOOGLE_PROJECT_SERVICES= \
+    cloud.googleapis.com \
+    compute.googleapis.com \
+    sourcerepo.googleapis.com \
+    cloudbuild.googleapis.com \
+    artifactregistry.googleapis.com \
+    secretmanager.googleapis.com
+
 include Makefile.mk

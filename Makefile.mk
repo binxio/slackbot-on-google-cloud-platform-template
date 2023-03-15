@@ -7,6 +7,9 @@ help:           ## Show this help.
 .PHONY: configure-secrets
 configure-secrets: secrets/bot-token.upload secrets/app-token.upload secrets/signing-secret.upload ## configure Slackbot token and signing key
 
+enable-services:  ## enable required services
+	gcloud services enable $(GOOGLE_PROJECT_SERVICES)
+
 secrets/bot-token.upload: secrets/bot-token
 	gcloud secrets versions add $(SLACKBOT_NAME)-bot-token \
 	    --data-file secrets/bot-token && \
