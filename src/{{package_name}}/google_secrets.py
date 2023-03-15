@@ -91,8 +91,10 @@ _INSTANCES: dict[str, SecretManager] = {}
 def get_secret(name: str, configuration: str = ""):
     """
     gets the value of the secret `name` from the Google secret manager. you
-    can override the value to be taken from the environment by setting
-    the environment variable with name `name.upper().replace("-", "_")`
+    can override the value locally by setting the environment variable with  the
+    name `name.upper().replace("-", "_")`
+
+    For instance slackbot-app-token because SLACKBOT_APP_TOKEN.
     """
     env_name = name.upper().replace("-", "_")
     value = os.environ.get(env_name)

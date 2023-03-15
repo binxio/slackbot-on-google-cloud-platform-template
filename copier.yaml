@@ -142,7 +142,3 @@ _tasks:
     git commit -m 'initial import' &&
     git remote add origin {{url}} &&
     git tag 0.0.0) || exit 0
-  - >-
-    echo "===check your state bucket exists ===";
-    echo "gsutil mb -l {{terraform_state_bucket_location}} gs://{{terraform_state_bucket}}"
-    echo "gsutil versioning set on gs://{{terraform_state_bucket}}"

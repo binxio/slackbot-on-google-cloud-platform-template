@@ -11,15 +11,15 @@ logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"), format="%(levelname)s: %(message)s"
 )
 
-
 slackbot = App(
-    token=get_secret("{{slackbot_name}}-token"),
+    token=get_secret("{{slackbot_name}}-bot-token"),
     signing_secret=get_secret("{{slackbot_name}}-signing-secret"),
     token_verification_enabled=os.getenv("SLACK_TOKEN_VERIFICATION_ENABLED", "true") == "true"
 )
 
 
-def command_help(respond):
+def command_help(respond, ack):
+    ack()
     respond(
         """
         Please add the commands available.
@@ -38,7 +38,7 @@ def mention_help(event, say):
 
 @click.command(help="to allow users to interact")
 @click.option(
-    "--socket-mode/--no-socket-mode", default=False, help="connection to Slack"
+    "--socket-mode/--no-socket-mode", default=True, help="connection to Slack"
 )
 def main(socket_mode):
     """
@@ -51,12 +51,12 @@ def main(socket_mode):
     slackbot.command("/{{slackbot_name}}")(command_help)
 
     if socket_mode:
-        token = SecretManager.get_instance().get_secret("{{slackbot_name}}-token")
-        handler = SocketModeHandler(slackbot, token)
+        app_token = get_secret("{{slackbot_name}}-app-token")
+        handler = SocketModeHandler(slackbot, app_token)
         handler.start()
     else:
         slackbot.start(port=int(os.getenv("PORT", 8080)), path="/slack/events")
 
 
 if __name__ == "__main__":
-    main(socket_mode=True)
+    main()

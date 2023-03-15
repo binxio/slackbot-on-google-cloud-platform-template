@@ -40,7 +40,7 @@ Copying from template version 0.0.0.post6.dev0+78d6734
     create  terraform/variables.tf
     create  terraform/pipeline.tf
     create  terraform/slackbot.tf
-    create  Dockerfile
+    create  Dockerfile.jinja
     create  cloudbuild
     create  cloudbuild/deploy.yaml
     create  cloudbuild/build.yaml

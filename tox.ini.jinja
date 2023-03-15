@@ -11,7 +11,8 @@ deps =
 
 setenv =
    SLACK_TOKEN_VERIFICATION_ENABLED = false
-   {{slackbot_name | regex_replace("-", "_") |upper}}_TOKEN = deadbeef
+   {{slackbot_name | regex_replace("-", "_") |upper}}_BOT_TOKEN = deadbeef
+   {{slackbot_name | regex_replace("-", "_") |upper}}_APP_TOKEN = deadbeef
    {{slackbot_name | regex_replace("-", "_") |upper}}_SIGNING_SECRET = deadbeef
 
 commands = pytest tests

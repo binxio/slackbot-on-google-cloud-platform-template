@@ -10,6 +10,6 @@ steps:
     dir: ./terraform
 
   - name: 'docker.io/hashicorp/terraform:1.3.4'
-    args: ['apply', '-auto-approve']
+    args: ['apply', '-auto-approve', '-lock-timeout=5m']
     dir: ./terraform
     timeout: 1800s

@@ -1,0 +1,43 @@
+_metadata:
+  major_version: 1
+  minor_version: 1
+
+display_information:
+  name: {{name}}
+  long_description: {{name}} - {{description}}
+  description: {{description}}
+
+settings:
+  socket_mode_enabled: true
+
+  event_subscriptions:
+    bot_events:
+      - app_mention
+
+  interactivity:
+    is_enabled: true
+
+  org_deploy_enabled: false
+  token_rotation_enabled: false
+
+features:
+  app_home:
+    home_tab_enabled: true
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+
+  bot_user:
+    display_name: {{name}}
+
+  slash_commands:
+    - command: /{{slackbot_name}}
+      description: {{description}}
+      usage_hint: /{{slackbot_name}}
+
+oauth_config:
+  scopes:
+    bot:
+      - commands
+      - chat:write
+      - chat:write.public
+      - app_mentions:read

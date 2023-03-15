@@ -85,7 +85,8 @@ resource "google_project_iam_member" "slackbot" {
 
 resource "google_secret_manager_secret" "slackbot" {
   for_each = toset([
-    "{{ slackbot_name }}-token",
+   "{{ slackbot_name }}-bot-token",
+    "{{ slackbot_name }}-app-token",
     "{{ slackbot_name }}-signing-secret",
   ])
   secret_id = each.value
