@@ -1,3 +1,4 @@
+---
 # questions
 name:
   type: str
@@ -11,7 +12,11 @@ description:
   type: str
   help: a short description of the Slackbot
   default: >-
-    chats about 
+    chats about
+  validator: |
+    {% if not description.strip() %}
+    a short description is required.
+    {% endif %}
 
 package_name:
   type: str
@@ -31,6 +36,16 @@ slackbot_name:
   default: >-
     {{ package_name | regex_replace('_', '-')  }}
   when: false
+
+slackbot_command:
+  type: str
+  help: the slackbot command prefix
+  default: >-
+    /{{ slackbot_name |regex_replace('-?slackbot', '')}}
+  validator: |
+    {% if not (slackbot_command | regex_search('^\\/[a-z0-9\\-_]+$')) %}
+    the command must start with a slash and consist of letters, digits, underscores or dashes.
+    {% endif %}
 
 author:
   type: str
@@ -113,13 +128,18 @@ url:
   when: false
 
 _skip_if_exists:
+  - src/**
   - tests/**
-  - 'src/{{module_name}}/**'
-  - README.md
-  - setup.cfg
-  - .release
-  - Pipfile
+  - cloudbuild/**
+  - terraform/**
+  - Dockerfile
+  - Makefile*
   - pyproject.toml
+  - setup.cfg
+  - tox.ini
+  - Pipfile*
+  - .release
+  - README.md
 
 _exclude:
   - copier.yaml
