@@ -36,19 +36,19 @@ def mention_help(event, say):
     )
 
 
-@click.command(help="to allow users to interact")
+@click.command(help="starts {{name}}")
 @click.option(
     "--socket-mode/--no-socket-mode", default=True, help="connection to Slack"
 )
 def main(socket_mode):
     """
-    starts the slackbot {{slackbot_name}}
+    starts {{name}}
     """
     slackbot.event(
         "app_mention",
     )(mention_help)
 
-    slackbot.command("/{{slackbot_name}}")(command_help)
+    slackbot.command("{{slackbot_command}}")(command_help)
 
     if socket_mode:
         app_token = get_secret("{{slackbot_name}}-app-token")

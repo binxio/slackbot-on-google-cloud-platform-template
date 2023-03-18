@@ -25,7 +25,7 @@ write_files:
         --rm \
         --name {{ slackbot_name }} \
         --network host \
-        {{repository_location}}-docker.pkg.dev/{{google_project}}/{{slackbot_name}}/{{slackbot_name}}:latest
+        {{repository_location}}-docker.pkg.dev/{{google_project}}/{{slackbot_name}}/slackbot:latest
 
       Restart=always
       SuccessExitStatus=0 SIGTERM

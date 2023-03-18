@@ -25,5 +25,5 @@ images:
   - '${_IMAGE}'
 
 substitutions:
-  _IMAGE: '{{repository_location}}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${REPO_NAME}:${TAG_NAME:-${SHORT_SHA}}'
+  _IMAGE: '{{repository_location}}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/slackbot:${TAG_NAME:-${SHORT_SHA}}'
   _GIT_REPOSITORY_URL: {{ url }}
