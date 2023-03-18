@@ -1,6 +1,22 @@
 # Slackbot copier template
 This copier templates deploys a Slackbot into Google Cloud Platform!
 
+The template assumes that already have experience an installation of gcloud and that you
+have a Google Cloud project to deploy the bot in.
+
+The template creates:
+- a Google Cloud source code repository to contain the slackbot source code.
+- a CloudBuild CI/CD pipeline to build the container image.
+- a CloudBuild CI/CD pipeline to deploy changes to the Terraform templates.
+- a Google Cloud Compute Engine managed instance group to run the slackbot.
+- a Slack application manifest to ease the configuration of the application
+
+The slackbot implementation will be responding to mentions and commands.
+
+The slackbot is running in socket mode, meaning there is no need to configure
+any incoming internet traffic and makes it easy to respond to Slack API requests
+within three seconds.
+
 ## Getting started!
 To create and deploy your bot, type:
 
@@ -8,7 +24,7 @@ To create and deploy your bot, type:
 $ pip install copier
 $ copier https://github.com/binxio/slackbot-on-google-cloud-platform-template authority-scraper-slackbot
 🎤 the human readable name of your slackbot
-   authority scraper slackbot
+   Authority Scraper
 🎤 a short description of the Slackbot
    chats about authority contributions
 🎤 the name of the package
