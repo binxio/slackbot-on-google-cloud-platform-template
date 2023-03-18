@@ -1,8 +1,15 @@
+---
 timeout: 2400s
 options:
   substitution_option: 'ALLOW_LOOSE'
 
 steps:
+  - name: 'python:3.9'
+    entrypoint: '/bin/sh'
+    args:
+      - -c
+      - pip install tox && tox run
+
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '${_IMAGE}', '.']
 
@@ -26,4 +33,4 @@ images:
 
 substitutions:
   _IMAGE: '{{repository_location}}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/slackbot:${TAG_NAME:-${SHORT_SHA}}'
-  _GIT_REPOSITORY_URL: {{ url }}
+  _GIT_REPOSITORY_URL: '{{ url }}'
