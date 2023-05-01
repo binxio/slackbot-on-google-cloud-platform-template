@@ -9,6 +9,7 @@ def respond(*args, **kwargs):
     respond_args = (args, kwargs)
 
 def ack(*args, **kwargs):
+    global ack_called
     ack_called = True
 
 def test_command_help():
